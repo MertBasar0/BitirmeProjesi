@@ -1,0 +1,23 @@
+﻿@model Entities.Product 
+<table
+    align="center">
+        <form asp-controller ="product" asp-action="add" method="post">
+            <div class="mb-3">
+              <div id="liveAlertPlaceholder"></div>
+              <label for="exampleInputProductName" class="form-label">Isım</label>
+              <input type="text" class="form-control" asp-for="ProductName" placeholder="Urun adı giriniz.*">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPrice" class="form-label">Fiyat</label>
+              <input type="text" class="form-control" asp-for="UnitPrice">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputInStock" class="form-label">Adet</label>
+                <input type="text" class="form-control" asp-for="UnitsInStock">
+             </div>
+             <button type="submit" id="liveAlertBtn" class="btn btn-primary">Kaydet</button>
+            
+         </form>
+</table>
+
+
