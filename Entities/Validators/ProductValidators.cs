@@ -13,11 +13,11 @@ namespace Entities.Validators
         {
             RuleFor(x => x.ProductName).NotNull().WithMessage("Lütfen bir değer giriniz..");
             RuleFor(x => x.UnitPrice).NotNull().WithMessage("Lütfen bir değer giriniz..");
-            RuleFor(x => x.UnitsInStock).NotNull().WithMessage("Lütfen bir değer giriniz..");
 
+            var result = RuleFor(x => x.UnitPrice).GetType();
         }
     }
 }
 
-//Kullanıcı Kayıt  oluktan sonra kullanıcıya sitemize hoşgeldiniz şekilnde bir mail gönderin adresine ..
+//Kullanıcı Kayıt olduktan sonra kullanıcıya sitemize hoşgeldiniz şekilnde bir mail gönderin adresine ..
 //smtp sınıfını kullancaksın . 

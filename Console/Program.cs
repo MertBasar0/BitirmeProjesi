@@ -5,95 +5,85 @@ using Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 
-//string choise = "";
+//////////////////Managers///////////////////////
 
-//Console.WriteLine("Yapmak istediğiniz işlem nedir ?\n1.Müşteri kayıt\n2.Sepet kayıt");
-//choise = Console.ReadLine();
+BasketProductManager _basketProductManager = new BasketProductManager(new BasketProductDal());
+BasketManager _basketManager = new BasketManager(new BasketDal());
+CustomerManager _customerManager = new CustomerManager(new CustomerDal());
+ProductManager _productManager = new ProductManager(new ProductDal());
 
-//if (choise == "1")
-//{
-//    Console.WriteLine("Müşteri adını giriniz..");
-//    string ad = Console.ReadLine();
-//    Console.WriteLine("İletişim numarası giriniz..");
-//    string no = Console.ReadLine();
+//--------------------------//
 
-//    try
-//    {
-//BasketProductManager basketProductmanager =new BasketProductManager(new BasketProductDal());
 
-//BasketProduct BasketProduct = new BasketProduct();
-//BasketProduct.Product = new Product()
-//{
-//    UnitsInStock =49,
-//    ProductName = "armut",
-//    UnitPrice = 12,
-//};
-//BasketProduct.Basket = new Basket()
-//{
-//    BasketOfCustomerId = 1,
-//    InitTime = DateTime.Now
-//};
+string choise = "";
+bool success = false;
 
-//basketProductmanager.AddBasketProduct(BasketProduct);
 
-//try
-//{
-//    BasketManager BasketManager = new BasketManager(new BasketDal());
-//    BasketManager.AddBasket(new Basket() { InitTime = DateTime.Now});
-//}
-//catch (Exception ex)
-//{ 
-//    Console.WriteLine(ex.Message);
-//}
-Basket br = new Basket();
-Product pro = new Product() { ProductName = "mandalina", UnitPrice = 31, UnitsInStock = 62 };
-try
+do
 {
-   
-    BasketManager manager2 = new BasketManager(new BasketDal());
-    manager2.AddBasket(br);
-    //BasketProductManager manager = new BasketProductManager(new BasketProductDal());
-    //manager.AddBasketProduct(new BasketProduct() { Product = new Product() { ProductName = "AMUT", UnitPrice = 20, UnitsInStock = 30 }, Basket = new Basket() { InitTime = DateTime.Now } });
-}
-catch (Exception ex)
-{
-    Console.WriteLine(ex.Message);
-}
+    Console.WriteLine("Yapmak istediğiniz işlem grubunu seçiniz.\n1.Müşteri işlemleri\n");
+    choise = Console.ReadLine();
+
+    if (choise == "1")
+    {
+        do
+        {
+            Console.WriteLine("1.Müşteri kayıt\n2.Müşterileri Listele\n3.Müşteri sepetini anlık görüntüle");
+            Console.WriteLine("Çıkmak için herhangi bir tuşa basın");
+            choise = Console.ReadLine();
+
+            if (choise == "1")
+            {
+                Console.WriteLine("Müşteri adını giriniz..");
+                string ad = Console.ReadLine();
+
+                Customer customer = new Customer() { CustomerName = ad };
+
+                success = _customerManager.AddCustomer(customer);
+
+                _basketManager.AddBasket(new Basket() { CustomerID = customer.CustomerId });
+
+                if (success)
+                    Console.WriteLine("Kayıt Başarılı.");
+                else
+                    Console.WriteLine("Kayıt yapılamadı.");
+
+            }
+            else if (choise == "2")
+            {
+                List<Customer> customers = await _customerManager.GetAllCustomers();
+
+                foreach (Customer customer in customers)
+                {
+                    Console.WriteLine(customer.ToString());
+                }
+
+            }
+            else if (choise == "3")
+            {
+                Console.WriteLine("Müşterinin adını giriniz..");
+                string ad = Console.ReadLine();
+                Basket basket = await _basketManager.GetBasketByCustomerName(ad);
+                List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
+                if (basket != null && basketProducts.Count != 0)
+                {
+                    foreach (var item in basketProducts)
+                    {
+                        Product product = await _productManager.GetProductAsync((int)item.ProductId);
+                        Console.WriteLine(product.ToString());
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+
+        } while (true);
+    }
+
+} while (true);
 
 
-try
-{
-  
-    ProductManager productManager = new ProductManager(new ProductDal());
-    productManager.AddProduct(pro);
-}
-catch (Exception ex)
-{
-
-    Console.WriteLine(ex.Message);
-}
-try
-{
-    BasketProductManager productProductManager = new BasketProductManager(new BasketProductDal());
-    productProductManager.AddBasketProduct(new BasketProduct() { BasketId=br.BasketId,ProductId=pro.ProductId});
-}
-catch (Exception ex)
-{
-
-    Console.WriteLine(ex.Message);
-}
-
-Console.ReadLine();
-
-
-
-//    }
-//    catch (Exception ex)
-//    {
-
-//        Console.WriteLine(ex.Message);
-//    }
-
-//}
 
 

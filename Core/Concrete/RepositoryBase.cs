@@ -41,15 +41,16 @@ namespace Core.Concrete
             
         }
 
-        public async Task Delete(TEntity entity)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
 
-                await Task.Run(() => { _context.Set<TEntity>().Remove(entity); });
-                await _context.SaveChangesAsync();
+            await Task.Run(() => { _context.Set<TEntity>().Remove(entity); });
+            int isSuccess = await _context.SaveChangesAsync();
+            return Convert.ToBoolean(isSuccess);
             
         }
 
-        public async Task<List<TEntity>> GetAll(Expression<Func<TEntity, bool>>? filter)
+        public async Task<List<TEntity>> GetAll(Expression<Func<TEntity, bool>>? filter = null)
         {
 
                 if (filter == null)
@@ -63,7 +64,7 @@ namespace Core.Concrete
             
         }
 
-        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter)
+        public async Task<TEntity> Get(Expression<Func<TEntity, bool>>? filter)
         {
 
                 return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
@@ -71,12 +72,14 @@ namespace Core.Concrete
         }
 
 
-        public async Task Update(TEntity entity)
+        public async Task<bool> Update(TEntity entity)
         {
+            //await Task.Run(() => { _context.Set<TEntity>().Update(entity); });
 
-                await Task.Run(() => { _context.Set<TEntity>().Update(entity); });
-                await _context.SaveChangesAsync();
-            
+            var updatedEntity = _context.Entry(entity);
+            updatedEntity.State = EntityState.Modified;
+            int isSuccess = await _context.SaveChangesAsync();
+            return Convert.ToBoolean(isSuccess);
         }
     }
 }

@@ -1,9 +1,33 @@
 ﻿@model Entities.Concrete.Dto_s.RegisterDto
 
 @{
+    Layout = null;
+}
+
+@{
     ViewData["Title"] = "Kayıt Ol!";
 }
 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true"></link>
+    <link rel="stylesheet" href="~/WebApp_Store.styles.css" asp-append-version="true" />  
+</head>
+ <body>
+<header>
+<nav class="navbar bg-light">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">Hoşgeldiniz</span>
+    <form class="d-flex">
+        <a asp-action="login" asp-controller="account" class="btn btn-sm btn-outline-success float-md-end">Giriş Yap</a>
+    </form>
+  </div>
+</nav>
+</header>
     <div class="container mt-3">
         <div class="row">
             <div class="col-sm-2"></div>
@@ -12,8 +36,9 @@
                     <div class="card-header">
                         <h4 class="card-title">Giriş Yap</h4>
                     </div>
+                    <form asp-action="Register" asp-controller="account">
                     <div class="card-body">
-                        <form asp-action="Register">
+                        
                             <div class="form-group">
                                 <label asp-for="UserName" class="control-label">Kullanıcı Adı</label>
                                 <input asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı" />
@@ -28,14 +53,21 @@
                                 <label asp-for="Mail" class="control-label">Mail</label>
                                 <input asp-for="Mail" class="form-control" placeholder="Mail" />
                                 <span asp-validation-for="Mail" class="text-danger"></span>
-                            </div>
-                            <div class="card-footer">
-                                <input type="submit" class="btn btn-sm btn-outline-success float-md-start" value="Kayıt Ol" />
-                                <a asp-action="Login"  class="btn btn-group-sm btn-outline-primary float-lg-end">Giriş Yap</a>
-                            </div>
-                        </form>
+                            </div>   
                     </div>
+                    <div class="card-footer">
+                        <input type="submit" class="form-control shadow" value="Kayıt Ol" />
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+     <footer class="border-top footer text-muted">
+        <p class="text-muted">Copyright &copy <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> /Mert Başar/ 2022</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+    

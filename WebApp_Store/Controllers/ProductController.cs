@@ -6,40 +6,140 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp_Store.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="User,Admin,Manager")]
     public class ProductController : Controller
     {
         private ProductManager _productManager;
+        private BasketManager _basketManager;
+        private BasketProductManager _basketProductManager;
+
         public ProductController()
         {
             _productManager = new ProductManager(new ProductDal());
+            _basketManager = new BasketManager(new BasketDal());
+            _basketProductManager = new BasketProductManager(new BasketProductDal());
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Index(string? word = null)
+        {
+            List<Product> resultList  = new List<Product>();
+
+            Basket basket = await _basketManager.GetBasketByCustomerName(TempData["Message"].ToString());
+            TempData.Keep("Message");
+
+            List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
+
+            List<Product> products = await _productManager.GetProducts(word);
+
+            if (basketProducts.Count != 0)
+            {
+                resultList.AddRange(products);
+                foreach (var x in products)
+                {
+                    foreach (var y in basketProducts)
+                    {
+                        if (x.ProductId == y.ProductId)
+                        {
+                            resultList.Remove(x);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                resultList.AddRange(await _productManager.GetProducts(word));
+            }
+
+            return View(resultList);
+        }
+
 
         public IActionResult Add()
         {
             return View();
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Add(Product product)
         {
-            if (ModelState.IsValid)
+            if (product != null)
             {
-                bool IsSuccess = await Task.Run(() => _productManager.AddProduct(product));
-                if (IsSuccess)
+                if (ModelState.IsValid)
                 {
-                    ViewBag.success = "Ürün başarıyla kaydedildi..";
+                    bool IsSuccess = await Task.Run(() => _productManager.AddProduct(product));
+
+                    if (IsSuccess)
+                    {
+                        ViewBag.success = "Ürün başarıyla kaydedildi..";
+                    }
+                    else
+                    {
+                        ViewBag.faild = "Bir terslik var..";
+                    }
+
                 }
-                else
-                {
-                    ViewBag.faild = "Bir terslik var..";
-                }
-            }
-            else
-            {
-                ViewBag.empty = "Lütfen bir değer girin..";
             }
             return View();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Product product = await _productManager.GetProductAsync(id);
+            return View(product);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Product product)
+        {
+            bool isSuccess = await _productManager.EditProduct(product);
+            if (isSuccess)
+            {
+                ViewBag.result = "ürün güncellendi.";
+            }
+            else
+            {
+                ViewBag.result = "ürün güncellenirken bir hata oluştu.";
+            }
+
+            return RedirectToAction("index");
+        }
+
+
+        public async Task<IActionResult> AddProductToBasket(int _productId)
+        {
+            if (TempData["Message"] != null)
+            {
+                string customerName = TempData["Message"].ToString();
+                TempData.Keep("Message");
+
+                if (customerName != null)
+                {
+                    Basket basket = await _basketManager.GetBasketByCustomerName(customerName);
+
+                    _basketProductManager.AddBasketProduct(new BasketProduct() { ProductId = _productId, BasketId = basket.BasketId });
+                }
+            }
+            return RedirectToAction("index");
+        }
+
+        //[HttpPost]
+        //public async void
+
+
+        //Register gerçekleşirken aynı isimde customer oluştur. Login gerçekleşirken user tablosunu kontrol et. User da veri yoksa customer da varsa customer'ı sil.
+        //Product list ekranına sepete ekle butonu koy. sepet view ı ekleyip burada ürünleri görüntüle.satış gerçekleştiğinde satış
+        //nesnesi oluştur ve sepeti boşalt.
+
+
+
+        //Hocanın verdiği hazır template'i giriş sayfasına al. JavaScriptle ilgili çalış.
+        //Api ile get metotlarını kullanılabilir hale getir.
+
     }
 }

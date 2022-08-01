@@ -17,20 +17,14 @@ namespace Business.Concrete
             customerDal = _customerDal;
         }
 
-        public void AddCustomer(Customer customer)
+        
+
+        public bool AddCustomer(Customer customer)
         {
-            bool success = false;
             try
             {
-                success = customerDal.Add(customer);
-                if (!success)
-                {
-                    throw new Exception("Müşteri eklenirken bir hata oluştu.\nLütfen database bağlantısını kontrol ediniz..");
-                }
-                else
-                {
-                    throw new Exception("Müşteri başarıyla eklendi..");
-                }
+                bool success = customerDal.Add(customer);
+                return success;
             }
             catch (Exception ex)
             {
@@ -38,6 +32,33 @@ namespace Business.Concrete
                 throw new Exception(ex.Message);
             }
            
+        }
+
+
+
+        public async Task<Customer> GetCustomerByName(string name)
+        {
+            return await customerDal.Get(x => x.CustomerName == name);
+        }
+
+
+        public async Task<List<Customer>> GetAllCustomers()
+        {
+            return await customerDal.GetAll(null);
+        }
+
+
+
+        public async Task<bool> CheckUserAsync(string UserName)
+        {
+            return await customerDal.CheckUserAsync(UserName);
+        }
+
+
+
+        public int GetLastCustomer()
+        {
+            return customerDal.GetLastCustomer();
         }
     }
 }

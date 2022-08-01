@@ -2,7 +2,61 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcomedfhfhdfdshdff</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    @{
+    if(TempData["Message"] != null)
+    {
+        <h2>Hoşgeldin @TempData["Message"]</h2>
+    }
+    TempData.Keep("Message");
+}
+
+
+<br/>
+<div class="home">
+
+<h4>Proje Amacı</h4>
+<p>
+    Katmanlı mimari yaklaşımıyla tasarlanan projede,WebApp,Console ve Api olmak üzere üç kullanıcı arayüzü tasarlanmış ve 'Generic Repository' tasarım deseni uygulanmıştır. 
+</p>
+
+<p>
+    Aynı zamanda session için TempData ile online tek kullanıcı görüntülenebilmektedir. 
+</p>
+
+<p>
+    Bunun yanında Mapping teknikleri ile çoka çok ve bire çok ilişki örnekleri uygulanmış, bire bir ilişki için mapping'e gerek duyulmamıştır. 
+</p>
+
+<p>
+    Kullanıcı giriş ve çıkışlarını kontrol edebilmek adına WebApp arayüzde Identity classını kullanarak kullanıcı giriş-çıkışları denetlenmektedir.
+    Aynı zamanda Identity class'ı kullanılarak kullanıcılara rol atamaları ve çıkarma işlemleri yapılabilmektedir.
+</p>
+
+<p>
+    Uygulamada bakacak olursak bütün bunlar anasayfa üzerinde online kullanıcı gösterimi, hakkımda kısmı ile kısa bir özgeçmiş, ürün işlemleri ile ürün tanımlama ve ürün lisleme sayfası üzerinde güncelleme ve sepete ekleme işlemleri yeralmakta.
+    Sepete eklenen ürünler 'Satın Al' butonu yardımıyla kullanıcının sipariş toplam tutarının görüntülendiği sayfaya yönlendirilmesi ve sepetin boşaltılması şeklinde kurgulanmıştır.
+    Role işlemleri için 'role ekle', 'role'e kullanıcı ata' ve role'ü silme olarak üç ana işlemin tanımlanmasıyla oluşturulmuştur.
+    Kullanıcı Role'leri için User, Admin, Manager olarak üç tip kullanıcı tanımlanmış ve bunların yapabilecekleri işlemler/ görebilecekleri sayfalar tanımlanmıştır.
+    Her kullanıcı kayıt sırasında User kullanıcı olarak tanımlanmaktadır.
+</p>
+
+<p>
+    Identity class'ın tuttuğu User tablosuna kaydedilen kullanıcılar Customer tablosuna da kaydedilmekte ve customer-sale bire çok ilişkisi ile customer-basket bire bire ilişkisi user tablosu üzerinden sağlanan referans veri ile customer tablosu üzerinden sağlanmaktadır.
+    Login işlemi sırasında kayıtlı kullanıcılar için customer tablosundaki kayıtları kontrol edildiği gibi veri customer tablosuna kaydedilmiş kullanıcılar için sepetlerinin oluşturulup oluşturulmadığı da kontrol edilmektedir.
+</p>
+
+<p>
+    Tüm input işlemleri için Attiribute ve fluent api ile validation doğrulamaları sağlanmaktadır.
+    Proje Code First tekniği kullanılarak yazılmıştır.
+
+</p>
+
+<p>
+     Saygılarımla...
+</p>
+
 </div>
+
+
+

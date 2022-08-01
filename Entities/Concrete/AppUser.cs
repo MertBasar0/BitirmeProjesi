@@ -15,6 +15,7 @@ namespace Entities.Concrete
         public DateTime? DeleteDate { get; set; }
         private Status _status = Status.Active;
         public Status Status { get => _status; set => _status = value; }
+
     }
 }
     

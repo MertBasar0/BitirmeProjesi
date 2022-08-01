@@ -23,5 +23,31 @@ namespace Business.Concrete
             success = _productDal.Add(product);
             return success;
         }
+
+        public async Task<List<Product>> GetProducts(string? word = null)
+        {
+            List<Product> products;
+            if (string.IsNullOrEmpty(word))
+            {
+                products = await _productDal.GetAll();
+            }
+            else
+            {
+                products = await _productDal.GetAll(x => x.ProductName.StartsWith(word) || x.ProductName.EndsWith(word));
+            }
+            
+           return products;
+        }
+
+        public async Task<Product> GetProductAsync(int _productId)
+        {
+            Product product = await _productDal.Get(x => x.ProductId == _productId);
+            return product;
+        }
+
+        public async Task<bool> EditProduct(Product product)
+        {
+            return await _productDal.Update(product);
+        }
     }
 }

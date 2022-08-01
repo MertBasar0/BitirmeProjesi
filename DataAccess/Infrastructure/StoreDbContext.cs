@@ -13,22 +13,21 @@ namespace DataAccess
 {
     public class StoreDbContext : DbContext
     {
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-E8H56SM; Database=BitirmeProjesi; integrated security=True; MultipleActiveResultSets=True;");
+            optionsBuilder.UseSqlServer("Server=LAPTOP-AK0MLSE8; Database=BitirmeProjesi; integrated security=True; MultipleActiveResultSets=True;");
         }
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder x)
         {
-            CompositeKeyRelation(modelBuilder);
-            OneToManyRelations(modelBuilder);
+            CompositeKeyRelation(x);
+            OneToManyRelations(x);
             //OneToOneRelations(modelBuilder);
         }
 
-
+            
 
         private void CompositeKeyRelation(ModelBuilder modelBuilder)
         {

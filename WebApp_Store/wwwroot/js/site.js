@@ -1,4 +1,5 @@
-﻿const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+﻿
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 
 const alert = (message, type) => {
     const wrapper = document.createElement('div')
@@ -18,3 +19,13 @@ if (alertTrigger) {
         alert('Nice, you triggered this alert message!', 'success')
     })
 }
+
+
+
+
+//$("#sepeteEkle").click(() => {
+//    $.post("http://localhost:24636/Product/AddProductToBasket", 2);
+//    });
+
+
+

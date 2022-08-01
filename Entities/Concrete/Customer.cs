@@ -1,5 +1,6 @@
 ﻿using Core.Abstract.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,12 +16,20 @@ namespace Entities
 
         public string? CustomerName { get; set; }
 
-        public string? ContactNumber { get; set; }
 
+        //Navigation Props
+
+        public virtual Basket? Basket { get; set; }
 
         //Fluent API props
 
         public IEnumerable<Sale>? Sales { get; set; }
+
+
+        public override string ToString()
+        {
+            return $"{CustomerId}  {CustomerName}";
+        }
 
     }
 }

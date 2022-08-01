@@ -15,9 +15,13 @@ namespace Entities
 
         public decimal Total { get; set; }
 
+        [Column("OluşturmaTarihi")]
+        public DateTime InitTime { get; set; } = DateTime.Now;
+
 
         //Fluent API Prop
 
         public Customer? Customer { get; set; }
+
     }
 }

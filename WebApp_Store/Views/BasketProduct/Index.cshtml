@@ -1,0 +1,30 @@
+﻿@using Entities
+
+@{
+    Layout = "_Layout";
+}
+
+@{ 
+    ViewData["Title"] = "Sepetim";
+}
+
+@{
+    Basket basket = ViewBag.sepet;
+}
+
+
+<table class="table" asp-controller="BasketProduct" asp-action="Index">
+    <form>
+        <thead>
+    <tr>
+      <th scope="col">BasketID: @basket.BasketId</th>
+      <th scope="col">Init Time: @basket.InitTime</th>
+      <th scope="col">CustomerID: @basket.CustomerID</th>
+      <th><button class="btn btn-success" asp-controller="sale" asp-action="AddSale">Satın Al</button></th>
+    </tr>
+  </thead>
+  <tbody>
+        <partial name="GetProductInBasketproducts"/>
+  </tbody>
+  </form>
+</table>

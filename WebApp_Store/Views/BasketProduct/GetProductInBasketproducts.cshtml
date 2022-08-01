@@ -1,0 +1,25 @@
+﻿@using Entities 
+@model List<Product>
+
+    <tr>
+            <h3>Sepet Bilgileri</h3>
+    </tr>
+    <tr>
+        <th scope="col">ProductID</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Unit Price</th>
+    </tr>
+          @{
+        foreach (Product item in Model)
+        {
+            <tr>
+                <td scope="col">@item.ProductId</td>
+                <td>@item.ProductName</td>
+                <td>@item.UnitPrice</td>
+                <td>
+                <button  type="submit" class="btn btn-outline-primary" asp-controller="BasketProduct" asp-action="Delete" name="productId" value=@item.ProductId>Çıkar</button>
+                </td> 
+            </tr>
+         }
+    }
+

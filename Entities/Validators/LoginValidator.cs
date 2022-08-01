@@ -13,8 +13,8 @@ namespace Entities.Validators
     {
         public LoginValidator()
         {
-            RuleFor(x => x.UserName).NotNull().WithMessage("Kullanıcı adınızı yeniden giriniz.");
-            RuleFor(x => x.Password).NotNull().WithMessage("Şifrenizi yeniden giriniz.");
+            RuleFor(x => x.UserName).NotNull().WithMessage("Kullanıcı adı boş geçilemez.");
+            RuleFor(x => x.Password).NotNull().WithMessage("Şifre boş geçilemez.");
         }
     }
 }

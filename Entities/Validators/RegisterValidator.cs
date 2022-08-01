@@ -13,7 +13,7 @@ namespace Entities.Validators
         public RegisterValidator()
         {
             RuleFor(x=>x.UserName).NotNull().WithMessage("Kullanıcı adı boş geçilemez");
-            RuleFor(x => x.Mail).NotNull().Matches(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").WithMessage("mail adresinizi yeniden giriniz.");
+            RuleFor(x => x.Mail).NotNull().WithMessage("mail adresinizi yeniden giriniz.");
         }
         //.Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$").WithMessage("parolayı tekrar giriniz");
     }

@@ -1,10 +1,6 @@
 ﻿using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -15,24 +11,29 @@ namespace Business.Concrete
         {
             basketDal = _basketDal;
         }
+        
 
-        public void AddBasket(Basket basket)
+        public bool AddBasket(Basket basket)
         {
             bool success = false;
             success = basketDal.Add(basket);
-            if (success)
-            {
-            throw new Exception("Sepet başarıyla eklendi.");
-            }
-            else
-            {
-                throw new Exception("Bir hata oluştu..");
-            }
-        }
-        public async Task<List<Basket>> GetAll()
-        {
-            return await basketDal.GetAll(null);
+            return success;
         }
 
+        public async Task<List<Basket>> GetAll(string name)
+        {
+            return await basketDal.GetAll(x => x.Customer.CustomerName == name);
+        }
+
+        public async Task<Basket> GetBasketByCustomerName(string name)
+        {
+            return await basketDal.Get(x => x.Customer.CustomerName == name);
+        }
+        
+
+        //public async List<Product> GetProductsFromBasket(Basket basket)
+        //{
+
+        //}
     }
 }

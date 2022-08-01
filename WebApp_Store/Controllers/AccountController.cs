@@ -1,9 +1,13 @@
-﻿using Entities.Concrete;
+﻿using Business.Concrete;
+using DataAccess.Abstract;
+using DataAccess.Concrete;
+using Entities;
+using Entities.Concrete;
 using Entities.Concrete.Dto_s;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using WebApp_Store.Models;
 
 namespace WebApp_Store.Controllers
 {
@@ -11,34 +15,74 @@ namespace WebApp_Store.Controllers
     {
         private readonly UserManager<AppUser> _userManager; //Identity sınıfının bana sağladığı hazır managerların referanslarını oluşturdum.
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IPasswordHasher<AppUser> _passwordHasher;
+        private CustomerManager _customerManager;
+        private BasketManager _basketManager;
+        private RoleManager<IdentityRole> _roleManager;
+        private IMailDal _mail;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPasswordHasher<AppUser> passwordHasher)
+        [TempData]
+        public string Message { get; set; }
+
+
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager,IMailDal mail)
         {
+         
             _userManager = userManager;  //DependencyInjection ile managerların AccountController sınıfıma enjekte ettim.
             _signInManager = signInManager;
-            _passwordHasher = passwordHasher;
+            _roleManager = roleManager;
+            _customerManager = new CustomerManager(new CustomerDal());
+            _basketManager = new BasketManager(new BasketDal());
+            _mail = mail;
         }
+
+
 
         #region Register
 
-        [HttpGet,AllowAnonymous]
-        public IActionResult Register() => View(); //  Register action'ım için Get actionı oluşturdum.
+        [HttpGet, AllowAnonymous]
+        public IActionResult Register() => View(); //  Register için Get actionı oluşturdum.
 
 
         [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDto model) // Register için post action'ı oluşturdum.
         {
-            if (ModelState.IsValid) //  FluentValidation ile kontrol edilen değerlerin kontrolü.
+            if (ModelState.IsValid) //  FluentValidation ile kontrol edilen değerlerin çıktısı.
             {
-                
-                var appUser  = new AppUser { UserName = model.UserName, Email = model.Mail};                                // yeni kullanıcı new'lenerek view'den alınan
+
+                var appUser = new AppUser { UserName = model.UserName, Email = model.Mail };                                // yeni kullanıcı new'lenerek view'den alınan
                                                                                                                             // değerler propların üzerine atılır.
                                                                                                                             //_userManager da tanımlanmış hazır create
-                IdentityResult result = await _userManager.CreateAsync(appUser, model.Password);                            //metoduyla kullanıcı Identity sınıfının
-                                                                                                                            //oluşturduğu tablolara eklenir.
+                IdentityResult result = await _userManager.CreateAsync(appUser, model.Password);                                                                                                      //metoduyla kullanıcı Identity sınıfının
+                                                                                                                                                                                                      //oluşturduğu tablolara eklenir.
                 if (result.Succeeded)
                 {
+                    bool check = await _customerManager.CheckUserAsync(appUser.UserName);
+                    if (!check)
+                    {
+                        Customer cus = new Customer() { CustomerName = appUser.UserName };
+
+                        if (cus != null)
+                        {
+                            _customerManager.AddCustomer(cus);
+                        }
+
+                        Basket basket = new Basket() { CustomerID = cus.CustomerId };
+
+                        if (basket != null)
+                        {
+                            _basketManager.AddBasket(basket);
+                        }
+
+                    }
+
+                    //role ekleme
+                    await _userManager.AddToRoleAsync(appUser, "User");
+
+
+                    MailDataDTO mmail = new MailDataDTO(new List<string>() { appUser.Email }, $"Mert Basar bitirme projesinde kullanıcı hesabınız oluşturuldu. Kullanıcı Adınız, {appUser.UserName}. Bu mail test amaçlıdır ve SendGrid smtp aracılığıyla gönderilmiştir..");
+
+                    await _mail.SendAsync(mmail, new CancellationToken());
+                    
                     return RedirectToAction("Login");
                 }
                 else
@@ -53,18 +97,30 @@ namespace WebApp_Store.Controllers
         }
         #endregion
 
-        #region Login
-        [AllowAnonymous,HttpGet]
+        //#region Session
+        //[NonAction]
+        //public void OnGet(string userName)
+        //{
+           
+        //    if (string.IsNullOrEmpty(HttpContext.Session.GetString(SessionKeyName)))
+        //    {
+        //        HttpContext.Session.SetString(SessionKeyName, userName);
+        //    }
+        //}
+        //#endregion
+
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
-            return View(new LoginDto() { ReturnUrl = returnUrl });
+            return View(new LoginDto { ReturnUrl = returnUrl });
         }
+
 
         [AllowAnonymous,ValidateAntiForgeryToken,HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 AppUser user = await _userManager.FindByNameAsync(model.UserName);
                 if (user != null)
                 {
@@ -72,6 +128,34 @@ namespace WebApp_Store.Controllers
 
                     if (result.Succeeded)
                     {
+                        var check = await _customerManager.CheckUserAsync(user.UserName);
+                        if (!check)
+                        {
+                            Customer cus = new Customer() { CustomerName = user.UserName };
+                            if (cus != null)
+                            {
+                                _customerManager.AddCustomer(cus);
+                            }
+
+                            Basket basket = new Basket() { CustomerID = cus.CustomerId };
+
+                            if (basket != null)
+                            {
+                                _basketManager.AddBasket(basket);
+                            }
+                        }
+                        else if (check)
+                        {
+                            Basket basket = await _basketManager.GetBasketByCustomerName(user.UserName);
+                            if (basket == null)
+                            {
+                                Customer custo = await _customerManager.GetCustomerByName(user.UserName);
+                                _basketManager.AddBasket(new Basket() { CustomerID = custo.CustomerId});
+                            }
+                        }
+                        
+                        Message = user.UserName;
+
                         return Redirect(model.ReturnUrl ?? "/");
                     }
                     else
@@ -79,9 +163,16 @@ namespace WebApp_Store.Controllers
                         ModelState.AddModelError("", "hata");
                     }
                 }
-            //}
+            }
             return View(model);
-            #endregion
+         
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("login","account"); 
         }
     }
 }

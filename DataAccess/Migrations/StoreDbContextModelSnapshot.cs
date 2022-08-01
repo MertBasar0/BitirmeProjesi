@@ -30,10 +30,17 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BasketId"), 1L, 1);
 
+                    b.Property<int?>("CustomerID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("InitTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("BasketId");
+
+                    b.HasIndex("CustomerID")
+                        .IsUnique()
+                        .HasFilter("[CustomerID] IS NOT NULL");
 
                     b.ToTable("Sepetler");
                 });
@@ -61,9 +68,6 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"), 1L, 1);
 
-                    b.Property<string>("ContactNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CustomerName")
                         .HasColumnType("nvarchar(max)");
 
@@ -86,9 +90,6 @@ namespace DataAccess.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("UnitsInStock")
-                        .HasColumnType("int");
-
                     b.HasKey("ProductId");
 
                     b.ToTable("Urunler");
@@ -105,6 +106,10 @@ namespace DataAccess.Migrations
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("InitTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("OluşturmaTarihi");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -113,6 +118,15 @@ namespace DataAccess.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Satişlar");
+                });
+
+            modelBuilder.Entity("Entities.Basket", b =>
+                {
+                    b.HasOne("Entities.Customer", "Customer")
+                        .WithOne("Basket")
+                        .HasForeignKey("Entities.Basket", "CustomerID");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Entities.BasketProduct", b =>
@@ -150,6 +164,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Customer", b =>
                 {
+                    b.Navigation("Basket");
+
                     b.Navigation("Sales");
                 });
 

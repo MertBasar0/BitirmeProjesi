@@ -5,7 +5,7 @@ using WebApp_Store.Models;
 
 namespace WebApp_Store.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User,Admin,Manager")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

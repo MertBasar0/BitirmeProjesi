@@ -10,5 +10,8 @@ namespace DataAccess.Abstract
 {
     public interface ICustomerDal : IRepositoryBase<Customer>
     {
+        Task<bool> CheckUserAsync(string UserName);
+
+        int GetLastCustomer();
     }
 }

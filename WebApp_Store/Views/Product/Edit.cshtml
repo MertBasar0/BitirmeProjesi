@@ -1,0 +1,18 @@
+﻿@model Entities.Product 
+<table
+    align="center">
+        <form asp-controller ="product" asp-action="edit" method="post">
+            <div class="mb-3">
+              <input type="hidden" class="form-control" asp-for="ProductId">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputProductName" class="form-label">Isım</label>
+              <input type="text" class="form-control" asp-for="ProductName" placeholder="Urun adı giriniz.*">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPrice" class="form-label">Fiyat</label>
+              <input type="text" class="form-control" asp-for="UnitPrice">
+            </div>
+             <button type="submit" class="btn btn-primary">Güncelle</button>
+         </form>
+</table>

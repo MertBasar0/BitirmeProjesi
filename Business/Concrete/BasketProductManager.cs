@@ -17,17 +17,26 @@ namespace Business.Concrete
             _basketProductDal = basketProductDal;
         }
 
+
         public void AddBasketProduct(BasketProduct basketProduct)
         {
-            bool success = false;
-            success = _basketProductDal.Add(basketProduct);
-            if (success)
+            bool success = _basketProductDal.Add(basketProduct);
+        }
+
+
+        public async Task<List<BasketProduct>> GetAllBasketProductsByBasketId(int id)
+        {
+            return await _basketProductDal.GetAll(x =>x.BasketId == id);
+        }
+
+        public async Task DeleteBasketProduct(int _productId, int _basketId)
+        {
+
+
+            BasketProduct x = await _basketProductDal.Get(x => x.ProductId == _productId && x.BasketId == _basketId);
+            if (x != null)
             {
-                throw new Exception("Eşleştirme başarıyla gerçekleştirildi..");
-            }
-            else if(!success)
-            {
-                throw new Exception("Kayıt oluşturulurken bir hata oluştu");
+                await _basketProductDal.DeleteAsync(x);
             }
         }
     }

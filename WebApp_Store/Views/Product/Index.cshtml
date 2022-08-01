@@ -1,0 +1,41 @@
+﻿@using Entities
+@model List<Product>
+
+      
+
+            <nav class="navbar bg-light">
+              <div class="container-fluid">
+                <form class="d-flex" role="search">
+                  <input class="form-control me-2" asp-controller="Product" asp-action="Index" method="get" type="search" name="word" placeholder="Arama yapın.." aria-label="Search">
+                  <button class="btn btn-outline-success" asp-controller="Product" asp-action="Index" type="submit">Ara</button>
+                </form>
+              </div>
+            </nav>
+
+<table class="table">
+    <form>
+        <thead>
+
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Transactions</th>
+        </tr>
+  </thead>
+  <tbody>
+        @foreach (Product item in Model)
+        {
+           <tr>
+            <th scope="row">@item.ProductId</th>
+            <td>@item.ProductName</td>
+            <td>@item.UnitPrice</td>
+            <td>
+                <button type="submit" class="btn btn-outline-warning" asp-controller="product" asp-action="edit" value=@item.ProductId name="id">Güncelle</button>
+                <button type="submit" class="btn btn-outline-dark" asp-controller="product" asp-action="AddProductToBasket" id="sepeteEkle" value=@item.ProductId name="_productId">Sepete Ekle</button>
+            </td>
+           </tr>
+        }
+  </tbody>
+  </form>
+</table>

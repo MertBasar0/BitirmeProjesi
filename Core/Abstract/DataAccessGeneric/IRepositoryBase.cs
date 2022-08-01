@@ -11,9 +11,9 @@ namespace Core.Abstract.DataAccessGeneric
     public interface IRepositoryBase<T> where T : class, IEntity, new()
     {
         bool Add(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
-        Task<List<T>> GetAll(Expression<Func<T,bool>>? filter);
+        Task<bool> Update(T entity);
+        Task<bool> DeleteAsync(T entity);
+        Task<List<T>> GetAll(Expression<Func<T,bool>>? filter = null);
         Task<T> Get(Expression<Func<T,bool>> filter);
     }
 }

@@ -1,0 +1,31 @@
+﻿@model List<IdentityRole>
+
+
+<table class="table">
+    <form>
+        <thead>
+        <tr>
+            <td> <button class="btn btn-outline-warning" asp-controller="Role" asp-action="Create"  type="submit">Role Ekle</button></td>
+        </tr>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">NormalizedName</th>
+      <th scope="col">ConcurrencyStamp</th>
+    </tr>
+  </thead>
+  <tbody>
+        @foreach (var item in Model)
+        {
+           <tr>
+            <th scope="row">@item.Id</th>
+            <td>@item.Name</td>
+            <td>@item.NormalizedName</td>
+            <td>@item.ConcurrencyStamp<td/>
+            <button class="btn btn-outline-info" asp-controller="Role" asp-action="AssignedRole" name="RoleName" value="@item.Name">Kullanıcı Ata</button>
+            <button class="btn btn-outline-info" asp-controller="Role" asp-action="deleteRole" name="roleName" value="@item.Name" >Rolü Kaldır</button>
+           </tr>
+        }
+  </tbody>
+  </form>
+</table>
