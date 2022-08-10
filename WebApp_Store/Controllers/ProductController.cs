@@ -128,18 +128,18 @@ namespace WebApp_Store.Controllers
             return RedirectToAction("index");
         }
 
-        //[HttpPost]
-        //public async void
-
-
-        //Register gerçekleşirken aynı isimde customer oluştur. Login gerçekleşirken user tablosunu kontrol et. User da veri yoksa customer da varsa customer'ı sil.
-        //Product list ekranına sepete ekle butonu koy. sepet view ı ekleyip burada ürünleri görüntüle.satış gerçekleştiğinde satış
-        //nesnesi oluştur ve sepeti boşalt.
-
-
-
-        //Hocanın verdiği hazır template'i giriş sayfasına al. JavaScriptle ilgili çalış.
-        //Api ile get metotlarını kullanılabilir hale getir.
-
+        public async Task<IActionResult> deleteProduct(int _productId)
+        {
+            Product pro = await _productManager.GetProductAsync(_productId);
+            bool success = await _productManager.deleteProductAsync(_productId);
+            if (success)
+            {
+                return RedirectToAction("index");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

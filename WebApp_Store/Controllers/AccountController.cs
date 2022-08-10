@@ -75,14 +75,35 @@ namespace WebApp_Store.Controllers
 
                     }
 
-                    //role ekleme
+                    #region Role ekleme
+
+                    List<IQueryable> roleList = new List<IQueryable>() { _roleManager.Roles };
+                    int x = roleList.Count;
+                    if (x == 0)
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
+                        await _roleManager.CreateAsync(new IdentityRole() { Name = "Manager" });
+                        await _roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+
+                        await _userManager.AddToRoleAsync(appUser, "Manager");
+                    }
+
                     await _userManager.AddToRoleAsync(appUser, "User");
+
+                    #endregion
+
+
+
+                    #region Mail gönderimi
 
 
                     MailDataDTO mmail = new MailDataDTO(new List<string>() { appUser.Email }, $"Mert Basar bitirme projesinde kullanıcı hesabınız oluşturuldu. Kullanıcı Adınız, {appUser.UserName}. Bu mail test amaçlıdır ve SendGrid smtp aracılığıyla gönderilmiştir..");
 
                     await _mail.SendAsync(mmail, new CancellationToken());
-                    
+
+                    #endregion
+
+
                     return RedirectToAction("Login");
                 }
                 else

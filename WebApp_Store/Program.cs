@@ -61,8 +61,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=home}/{action=index}");
 
-app.MapControllerRoute(
-    name: "sale",
-    pattern: "{controller=BasketProduct}/{action=Index}");
 
 app.Run();

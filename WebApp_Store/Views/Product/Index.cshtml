@@ -33,6 +33,7 @@
             <td>
                 <button type="submit" class="btn btn-outline-warning" asp-controller="product" asp-action="edit" value=@item.ProductId name="id">Güncelle</button>
                 <button type="submit" class="btn btn-outline-dark" asp-controller="product" asp-action="AddProductToBasket" id="sepeteEkle" value=@item.ProductId name="_productId">Sepete Ekle</button>
+                <button type="submit" class="btn btn-danger" asp-controller="product" asp-action="deleteProduct" id="delete" value=@item.ProductId name="_productId">Ürünü Sil</button>
             </td>
            </tr>
         }

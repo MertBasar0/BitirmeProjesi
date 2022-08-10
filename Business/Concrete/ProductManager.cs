@@ -49,5 +49,11 @@ namespace Business.Concrete
         {
             return await _productDal.Update(product);
         }
+
+        public async Task<bool> deleteProductAsync(int _productId)
+        {
+            Product pro = await _productDal.Get(x =>x.ProductId == _productId);
+            return await _productDal.DeleteAsync(pro);
+        }
     }
 }
