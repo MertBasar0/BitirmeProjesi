@@ -9,6 +9,10 @@ namespace DataAccess.Abstract
 {
     public interface IMailDal
     {
-        Task<bool> SendAsync(MailDataDTO data, CancellationToken ct);
+        //Task<bool> SendAsync(MailDataDTO data, CancellationToken ct);
+
+        Task CreateRabbitMQSenderAsync(MailDataDTO mailData);
+
+        List<string> RabbitMQReceivedAsync();
     }
 }

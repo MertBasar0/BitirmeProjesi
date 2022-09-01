@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DataAccess.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebApp_Store.Models;
@@ -9,15 +10,21 @@ namespace WebApp_Store.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IMailDal _mail;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IMailDal mail)
         {
             _logger = logger;
+            _mail = mail;   
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<string> receivers = _mail.RabbitMQReceivedAsync();
+
+
+            return View(receivers);
+            
         }
 
         public IActionResult Privacy()

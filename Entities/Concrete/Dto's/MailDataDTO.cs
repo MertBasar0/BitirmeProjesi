@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete.Dto_s
 {
-    public class MailDataDTO
+    public class MailDataDTO 
     {
         //alıcı
 
@@ -31,6 +31,17 @@ namespace Entities.Concrete.Dto_s
         public string Subject { get; set; }
 
         public string? Body { get; set; }
+
+        public MailDataDTO()
+        {
+
+        }
+
+        public MailDataDTO(List<string> to, string subject)
+        {
+            To = to;
+            Subject = subject;
+        }
 
 
         public MailDataDTO(List<string> to, string subject, string? body = null, string? from = null, string? displayName = null, string? replyTo = null, string? replyToName = null, List<string>? bcc = null, List<string>? cc = null)

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<string>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,6 +11,14 @@
         <h2>Hoşgeldin @TempData["Message"]</h2>
     }
     TempData.Keep("Message");
+    
+}
+@{
+
+    foreach (string toes in Model)
+    {
+        <h4>@toes  mailinize kaydınızla alakalı bilgilendirme gönderildi.</h4>
+    }
 }
 
 

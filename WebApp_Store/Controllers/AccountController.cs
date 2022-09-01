@@ -7,6 +7,7 @@ using Entities.Concrete.Dto_s;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
 using WebApp_Store.Models;
 
 namespace WebApp_Store.Controllers
@@ -19,6 +20,7 @@ namespace WebApp_Store.Controllers
         private BasketManager _basketManager;
         private RoleManager<IdentityRole> _roleManager;
         private IMailDal _mail;
+        
 
         [TempData]
         public string Message { get; set; }
@@ -34,6 +36,8 @@ namespace WebApp_Store.Controllers
             _basketManager = new BasketManager(new BasketDal());
             _mail = mail;
         }
+
+
 
 
 
@@ -99,7 +103,9 @@ namespace WebApp_Store.Controllers
 
                     MailDataDTO mmail = new MailDataDTO(new List<string>() { appUser.Email }, $"Mert Basar bitirme projesinde kullanıcı hesabınız oluşturuldu. Kullanıcı Adınız, {appUser.UserName}. Bu mail test amaçlıdır ve SendGrid smtp aracılığıyla gönderilmiştir..");
 
-                    await _mail.SendAsync(mmail, new CancellationToken());
+                    await _mail.CreateRabbitMQSenderAsync(mmail);
+
+                    //await _mail.SendAsync(mmail, new CancellationToken());
 
                     #endregion
 
