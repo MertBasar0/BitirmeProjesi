@@ -97,8 +97,8 @@ namespace DataAccess.Concrete
         private IConnection connection => _connection ?? (_connection = CreateConnetion());
 
 
-        private IModel _channel;
-        private IModel channel => _channel ?? (_channel = CreateChannel());
+        public IModel _channel;
+        public IModel channel => _channel ?? (_channel = CreateChannel());
 
 
         string createMail = "CreateMail";
@@ -138,17 +138,17 @@ namespace DataAccess.Concrete
         }
 
 
-        public List<string> RabbitMQReceivedAsync()
+        string? to = null;
+        public string RabbitMQReceivedAsync()
         {
-            List<string> to = new List<string>();
-           
+
             var result = new EventingBasicConsumer(channel);
 
             result.Received += (sender, args) =>
             {
-                List<string> message = JsonConvert.DeserializeObject<List<string>>(Encoding.UTF8.GetString(args.Body.ToArray()));
+                var message = JsonConvert.DeserializeObject<string>(Encoding.UTF8.GetString(args.Body.ToArray()));
 
-                to.Add(message.FirstOrDefault());
+                to = message;
             };
 
             channel.BasicConsume(responseMail, true, result);

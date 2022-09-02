@@ -34,9 +34,11 @@ async Task Response(string? mail = null)
 {
     if (mail != null)
     {
-        var response = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject($"{mail} adresine bilgilendirme maili gönderildi.."));
+        //var response = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject($"{mail} adresine bilgilendirme maili gönderildi.."));
 
-        _channel.BasicPublish(directExchange, responseMail, null, response);
+        //_channel.BasicPublish(directExchange, responseMail, null, response);$"{}"
+
+        Console.WriteLine($"{mail} adresine bilgilendirme maili gönderildi..\n---------------------------------------");
     }
    
 }
@@ -59,7 +61,7 @@ async Task listenAndExecute()
 
             await SendMail(message ,new CancellationToken());
 
-            await Response(message.To.ToArray().FirstOrDefault());
+            await Response(message.To.FirstOrDefault());
 
         }
 
@@ -149,7 +151,7 @@ MailSettings ConfMail()
         Host = "smtp.sendgrid.net",
         Port = 587,
         UserName = "apikey",
-        Password = "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",
+        Password = "*********************",
         DisplayName = "Mert Basar",
         UseSSL = false,
         UseStartTls = true,

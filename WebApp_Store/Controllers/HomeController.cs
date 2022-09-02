@@ -20,8 +20,7 @@ namespace WebApp_Store.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<string> receivers = _mail.RabbitMQReceivedAsync();
-
+            string receivers = _mail.RabbitMQReceivedAsync();
 
             return View(receivers);
             

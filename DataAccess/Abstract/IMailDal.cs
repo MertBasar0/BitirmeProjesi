@@ -13,6 +13,6 @@ namespace DataAccess.Abstract
 
         Task CreateRabbitMQSenderAsync(MailDataDTO mailData);
 
-        List<string> RabbitMQReceivedAsync();
+        string RabbitMQReceivedAsync();
     }
 }
