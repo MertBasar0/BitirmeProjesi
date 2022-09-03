@@ -2,6 +2,8 @@
 using DataAccess;
 using DataAccess.Concrete;
 using Entities;
+using Entities.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -64,15 +66,21 @@ do
                 Console.WriteLine("Müşterinin adını giriniz..");
                 string ad = Console.ReadLine();
                 Basket basket = await _basketManager.GetBasketByCustomerName(ad);
-                List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
-                if (basket != null && basketProducts.Count != 0)
+                
+                if (basket != null)
                 {
-                    foreach (var item in basketProducts)
+                    List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
+                    if (basketProducts.Count != 0)
                     {
+                        foreach (var item in basketProducts)
+                        {
                         Product product = await _productManager.GetProductAsync((int)item.ProductId);
                         Console.WriteLine(product.ToString());
+                        }
                     }
                 }
+                else
+                    Console.WriteLine("Sepette herhangi bir ürün bulunamadı..");
             }
             else
             {

@@ -27,10 +27,11 @@ namespace UI_Api.Controllers
         {
             List<Entities.Product> products = new List<Entities.Product>();
             Basket basket = await _basketManager.GetBasketByCustomerName(customerName);
-            List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
-
+            
             if (basket != null)
             {
+                List<BasketProduct> basketProducts = await _basketProductManager.GetAllBasketProductsByBasketId(basket.BasketId);
+
                 foreach (var item in basketProducts)
                 {
                     products.Add(await _productManager.GetProductAsync((int)item.ProductId));

@@ -18,10 +18,6 @@ namespace WebApp_Store.Controllers
         }
 
 
-        //public void asgas()
-        //{
-        //    _basketManager.
-        //}
 
     }
 }
