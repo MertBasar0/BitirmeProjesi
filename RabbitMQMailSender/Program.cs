@@ -148,14 +148,7 @@ MailSettings ConfMail()
 {
     MailSettings mailSettings = new MailSettings()
     {
-        Host = "smtp.sendgrid.net",
-        Port = 587,
-        UserName = "apikey",
-        Password = "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",
-        DisplayName = "Mert Basar",
-        UseSSL = false,
-        UseStartTls = true,
-        From = "mertbasar0@hotmail.com"
+       //SendGrid Account info
     };
 
     return mailSettings;
